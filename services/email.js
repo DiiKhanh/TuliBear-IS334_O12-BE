@@ -24,13 +24,13 @@ const sendEmail = async (emailDetail) => {
           (product) => `
         <li>
           <strong>Sản phẩm:</strong> ${product.productName} - 
-          <strong>Giá:</strong> ${product.price}vnd
+          <strong>Giá:</strong> ${product.price} đ
         </li>
       `
         )
         .join('')}
     </ul>
-    <p><strong>Tổng cộng:</strong> ${emailDetail.amount}vnd</p>
+    <p><strong>Tổng cộng:</strong> ${emailDetail.amount} đ</p>
     <p><strong>Địa chỉ giao hàng:</strong> ${emailDetail.address}</p>
     <p>Xin vui lòng kiểm tra thông tin đơn hàng của bạn. Chúng tôi sẽ thông báo cho bạn khi đơn hàng của bạn đã được gửi đi.</p>
     <p>Xin cảm ơn và chúc bạn một ngày tốt lành!</p>
