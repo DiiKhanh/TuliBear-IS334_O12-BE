@@ -91,19 +91,19 @@ function sortObject(obj) {
   return sorted
 }
 
-// const vnpay_return = async (req, res, next) => {
-//   let vnp_Params = req.query
-//   try {
-//     const mail = await service.sendEmail(emailDetail)
-//   } catch (err) {
-//     // console.log(err)
-//     return err;
-//   }
-//   return res.json({ code: vnp_Params['vnp_ResponseCode'] })
-// }
+const vnpay_return = async (req, res, next) => {
+  let vnp_Params = req.query
+  try {
+    const mail = await service.sendEmail(emailDetail)
+  } catch (err) {
+    // console.log(err)
+    return err
+  }
+  return res.json({ code: vnp_Params['vnp_ResponseCode'] })
+}
 
 const stripeController = async (req, res, next) => {}
 module.exports = {
   checkOutVNPay,
-  // vnpay_return,
+  vnpay_return,
 }
