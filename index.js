@@ -28,7 +28,7 @@ const corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200,
 }
-app.use(cors(corsOptions))
+app.use(cors())
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'))
