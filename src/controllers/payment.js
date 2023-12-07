@@ -105,5 +105,5 @@ function sortObject(obj) {
 const stripeController = async (req, res, next) => {}
 module.exports = {
   checkOutVNPay,
-  vnpay_return,
+  // vnpay_return,
 }
