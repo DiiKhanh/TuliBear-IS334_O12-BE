@@ -1,0 +1,43 @@
+//Created by CTT VNPAY
+
+extends layout
+
+block content
+    h3=title
+    div.table-responsive
+        form#createOrder(action='vnpay', method='POST')
+            div.form-group
+                label uid
+                input.form-control#amount(name='uid', placeholder='uid', value=uid)
+
+             div.form-group
+                label productId
+                input.form-control#amount(name='productId', placeholder='Họ và tên', value=productId)
+
+             div.form-group
+                label name_product
+                input.form-control#amount(name='name_product', placeholder='Họ và tên', value=name_pr)
+ 
+            div.form-group
+                    label image
+                    input.form-control#amount(name='image_url', placeholder='Họ và tên', value=image_url)
+            div.form-group
+                label quantity
+                input.form-control#amount(name='amount', placeholder='So tien', value=quantity)
+
+            div.form-group
+                label.control-label
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="bankCode", id="defaultPaymentMethod", value="", checked="true")] Cổng thanh toán VNPAYQR
+            div.form-group
+                label Ngôn ngữ
+                label.control-label
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="language", id="vnLanguage", value="vn", checked="true")] Tiếng việt
+                div.controls
+                label.radio-inline
+                #[input(type="radio", name="language", id="enLanguage", value="en")] Tiếng anh
+            button.btn.btn-default#btnPopup(type='submit') Thanh toán
+    p&nbsp;
