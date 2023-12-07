@@ -1,5 +1,4 @@
 let express = require('express')
-let router = express.Router()
 const request = require('request')
 const moment = require('moment')
 const Order = require('../model/Order')
@@ -69,15 +68,6 @@ const checkOutVNPay = async (req, res, next) => {
 
   console.log(vnp_Params)
   res.redirect(vnpUrl)
-  const order = await Order.create({
-    orderId,
-    uid,
-    productId,
-    name_product,
-    image_url,
-    quantity,
-    amount,
-  })
 }
 
 function sortObject(obj) {
@@ -99,9 +89,6 @@ function sortObject(obj) {
 const vnpay_return = async (req, res, next) => {
   let vnp_Params = req.query
   console.log(vnp_Params)
-  const order = await Order.findOne({ orderId: orderID })
-  order.status = 'paid'
-  await order.save()
   // console.log(this.name)
   // // console.log(vnp_Params)
   // // console.log(vnp_Params['vnp_Bill_FirstName'])
@@ -137,7 +124,8 @@ const vnpay_return = async (req, res, next) => {
   //   res.render('success', { code: '97' })
   // }
 
-  res.render('success', { code: vnp_Params['vnp_ResponseCode'] })
+  // res.render('success', { code: vnp_Params['vnp_ResponseCode'] })
+  return res.json({ code: vnp_Params['vnp_ResponseCode'] })
 }
 
 module.exports = {
