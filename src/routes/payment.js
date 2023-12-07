@@ -9,6 +9,6 @@ router.get('/vnpay', function (req, res, next) {
 
 router.post('/vnpay', checkOutVNPay)
 
-router.get('/vnpay_return', vnpay_return)
+// router.get('/vnpay_return', vnpay_return)
 
 module.exports = router

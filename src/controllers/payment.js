@@ -35,7 +35,7 @@ const checkOutVNPay = async (req, res, next) => {
   let vnpUrl = config.vnp_Url
   let returnUrl = config.vnp_ReturnUrl
   let orderId = moment(date).format('DDHHmmss')
-  let bankCode = "NCB"
+  let bankCode = 'NCB'
 
   let locale = 'vn'
   // if (locale === null || locale === '') {
@@ -67,12 +67,12 @@ const checkOutVNPay = async (req, res, next) => {
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false })
   emailDetail.name = name
   emailDetail.email = email
-  emailDetail.products = products//dump_products
+  emailDetail.products = products //dump_products
   emailDetail.address = address
   emailDetail.amount = amount
   // console.log(vnp_Params)
   // res.redirect(vnpUrl);
-  return res.json({ vnpUrl });
+  return res.json({ vnpUrl })
 }
 
 function sortObject(obj) {
@@ -91,16 +91,16 @@ function sortObject(obj) {
   return sorted
 }
 
-const vnpay_return = async (req, res, next) => {
-  let vnp_Params = req.query
-  try {
-    const mail = await service.sendEmail(emailDetail)
-  } catch (err) {
-    // console.log(err)
-    return err;
-  }
-  return res.json({ code: vnp_Params['vnp_ResponseCode'] })
-}
+// const vnpay_return = async (req, res, next) => {
+//   let vnp_Params = req.query
+//   try {
+//     const mail = await service.sendEmail(emailDetail)
+//   } catch (err) {
+//     // console.log(err)
+//     return err;
+//   }
+//   return res.json({ code: vnp_Params['vnp_ResponseCode'] })
+// }
 
 const stripeController = async (req, res, next) => {}
 module.exports = {
