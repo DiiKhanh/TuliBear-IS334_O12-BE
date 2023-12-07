@@ -7,16 +7,16 @@ const service = require('../services/email')
 const emailDetail = {}
 
 const checkOutVNPay = async (req, res, next) => {
-  console.log(req.body)
   process.env.TZ = 'Asia/Ho_Chi_Minh'
 
   //Order
-  const { name, gmail, products, address, amount } = req.body
-  console.log(amount)
-  let dump_products = [
-    { productName: 'Sản phẩm 1', price: 50.0 },
-    { productName: 'Sản phẩm 2', price: 30.0 },
-  ]
+  const { name, email, products, address, amount } = req.body
+  // console.log({ name, email, products, address, amount } )
+  // console.log(amount)
+  // let dump_products = [
+  //   { productName: 'Sản phẩm 1', price: 50.0 },
+  //   { productName: 'Sản phẩm 2', price: 30.0 },
+  // ]
   //Checkout
 
   let date = new Date()
@@ -35,12 +35,12 @@ const checkOutVNPay = async (req, res, next) => {
   let vnpUrl = config.vnp_Url
   let returnUrl = config.vnp_ReturnUrl
   let orderId = moment(date).format('DDHHmmss')
-  let bankCode = req.body.bankCode
+  let bankCode = "NCB"
 
-  let locale = req.body.language
-  if (locale === null || locale === '') {
-    locale = 'vn'
-  }
+  let locale = 'vn'
+  // if (locale === null || locale === '') {
+  //   locale = 'vn'
+  // }
   let currCode = 'VND'
   let vnp_Params = {}
   vnp_Params['vnp_Version'] = '2.1.0'
@@ -55,9 +55,6 @@ const checkOutVNPay = async (req, res, next) => {
   vnp_Params['vnp_ReturnUrl'] = returnUrl
   vnp_Params['vnp_IpAddr'] = ipAddr
   vnp_Params['vnp_CreateDate'] = createDate
-  if (bankCode !== null && bankCode !== '') {
-    vnp_Params['vnp_BankCode'] = bankCode
-  }
 
   vnp_Params = sortObject(vnp_Params)
 
@@ -69,12 +66,13 @@ const checkOutVNPay = async (req, res, next) => {
   vnp_Params['vnp_SecureHash'] = signed
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false })
   emailDetail.name = name
-  emailDetail.gmail = gmail
-  emailDetail.products = dump_products
+  emailDetail.email = email
+  emailDetail.products = products//dump_products
   emailDetail.address = address
   emailDetail.amount = amount
-  console.log(vnp_Params)
-  res.redirect(vnpUrl)
+  // console.log(vnp_Params)
+  // res.redirect(vnpUrl);
+  return res.json({ vnpUrl });
 }
 
 function sortObject(obj) {
@@ -95,12 +93,11 @@ function sortObject(obj) {
 
 const vnpay_return = async (req, res, next) => {
   let vnp_Params = req.query
-  console.log(vnp_Params)
-  console.log(emailDetail)
   try {
     const mail = await service.sendEmail(emailDetail)
   } catch (err) {
-    console.log(err)
+    // console.log(err)
+    return err;
   }
   return res.json({ code: vnp_Params['vnp_ResponseCode'] })
 }
