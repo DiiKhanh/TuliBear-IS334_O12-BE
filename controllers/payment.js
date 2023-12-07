@@ -1,18 +1,22 @@
 let express = require('express')
 const request = require('request')
 const moment = require('moment')
-const Order = require('../model/Order')
 const { await } = require('await')
-let orderID
+const stripe = require('stripe')(process.env.STRIPE_KEY)
+const service = require('../services/email')
+const emailDetail = {}
 
 const checkOutVNPay = async (req, res, next) => {
   console.log(req.body)
   process.env.TZ = 'Asia/Ho_Chi_Minh'
 
   //Order
-  const { uid, productId, name_product, image_url, quantity, amount } = req.body
+  const { name, gmail, products, address, amount } = req.body
   console.log(amount)
-
+  let dump_products = [
+    { productName: 'Sản phẩm 1', price: 50.0 },
+    { productName: 'Sản phẩm 2', price: 30.0 },
+  ]
   //Checkout
 
   let date = new Date()
@@ -31,7 +35,6 @@ const checkOutVNPay = async (req, res, next) => {
   let vnpUrl = config.vnp_Url
   let returnUrl = config.vnp_ReturnUrl
   let orderId = moment(date).format('DDHHmmss')
-  orderID = orderId
   let bankCode = req.body.bankCode
 
   let locale = req.body.language
@@ -65,7 +68,11 @@ const checkOutVNPay = async (req, res, next) => {
   let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex')
   vnp_Params['vnp_SecureHash'] = signed
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false })
-
+  emailDetail.name = name
+  emailDetail.gmail = gmail
+  emailDetail.products = dump_products
+  emailDetail.address = address
+  emailDetail.amount = amount
   console.log(vnp_Params)
   res.redirect(vnpUrl)
 }
@@ -89,45 +96,16 @@ function sortObject(obj) {
 const vnpay_return = async (req, res, next) => {
   let vnp_Params = req.query
   console.log(vnp_Params)
-  // console.log(this.name)
-  // // console.log(vnp_Params)
-  // // console.log(vnp_Params['vnp_Bill_FirstName'])
-  // let secureHash = vnp_Params['vnp_SecureHash']
-
-  // delete vnp_Params['vnp_SecureHash']
-  // delete vnp_Params['vnp_SecureHashType']
-
-  // vnp_Params = sortObject(vnp_Params)
-
-  // let config = require('../config/vnpay-config.json')
-
-  // let tmnCode = config.vnp_TmnCode
-  // let secretKey = config.vnp_HashSecret
-
-  // let querystring = require('qs')
-  // let signData = querystring.stringify(vnp_Params, { encode: false })
-  // let crypto = require('crypto')
-  // let hmac = crypto.createHmac('sha512', secretKey)
-  // let signed = hmac.update(new Buffer(signData, 'utf-8')).digest('hex')
-
-  // if (secureHash === signed) {
-  //   //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-  //   // console.log(vnp_Params)
-
-  //   res.render('success', {
-  //     code: vnp_Params['vnp_ResponseCode'],
-  //     arr: {
-  //       amount: vnp_Params['vnp_Amount'],
-  //     },
-  //   })
-  // } else {
-  //   res.render('success', { code: '97' })
-  // }
-
-  // res.render('success', { code: vnp_Params['vnp_ResponseCode'] })
+  console.log(emailDetail)
+  try {
+    const mail = await service.sendEmail(emailDetail)
+  } catch (err) {
+    console.log(err)
+  }
   return res.json({ code: vnp_Params['vnp_ResponseCode'] })
 }
 
+const stripeController = async (req, res, next) => {}
 module.exports = {
   checkOutVNPay,
   vnpay_return,

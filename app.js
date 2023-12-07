@@ -5,6 +5,7 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const order = require('./routes/payment')
+const email = require('./routes/email')
 const cors = require('cors')
 const http = require('http')
 require('dotenv').config()
@@ -30,8 +31,8 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'jade')
+// app.set('views', path.join(__dirname, 'views'))
+// app.set('view engine', 'jade')
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -42,10 +43,11 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/order', order)
+app.use('/send', email)
 
-app.use(function (req, res, next) {
-  res.render('layout')
-})
+// app.use(function (req, res, next) {
+//   res.render('layout')
+// })
 
 const port = process.env.PORT || 5000
 
